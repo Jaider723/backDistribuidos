@@ -108,7 +108,7 @@ class Game:
     async def endTurn(self):
         self.__turn += 1
         player = self.getTurnPlayer()
-        await player.send(EventsSendCode.ready.value, {})
+        await player.send(EventsSendCode.beginTurn.value, {})
         
 
 class GameState:
