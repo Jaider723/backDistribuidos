@@ -14,3 +14,4 @@ class EventsCode(Enum):
 class EventsSendCode(Enum):
     setColor = 1
     availableColors = 2
+    beginTurn = 3

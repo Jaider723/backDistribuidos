@@ -56,7 +56,7 @@ class Game:
             print("hasta aqui bien")
 
             data = {
-                "color": list(self.__gameColors.keys())
+                "colors": "".join(list(self.__gameColors.keys()))
             }
 
             for player in self.__players:
@@ -75,9 +75,10 @@ class Game:
         player = self.getPlayer(playerId)
         self.__diceNumber = (random.randint(1, 6), random.randint(1, 6))
         data = {
-            "dices": self.__diceNumber
+            "dices": "".join(map(str, self.__diceNumber)),
         }
-        player.send(GameStateEnum.beginTurn.value, data)
+        if player is not None:
+            player.send(EventsSendCode.beginTurn.value, data)
         self.__semaphore.release()
         return self.__diceNumber
     
