@@ -10,3 +10,7 @@ class GameStateEnum(Enum):
 
 class EventsCode(Enum):
     setColor = 1
+    
+class EventsSendCode(Enum):
+    setColor = 1
+    availableColors = 2

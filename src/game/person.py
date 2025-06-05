@@ -1,6 +1,6 @@
 from threading import Semaphore
 from fastapi import WebSocket, WebSocketDisconnect
-from .enums import EventsCode
+from .enums import EventsCode, EventsSendCode
 
 class Player:
     
@@ -26,16 +26,20 @@ class Player:
         return is_connected
 
     async def run(self):
-        print("funcionando")
         try:
             while(self.getIsConnect()):
-                print("UWU recibido")
                 json = await self.__con.receive_json(mode='text')
                 opcode = json.get("code")
                 match opcode:
                     case EventsCode.setColor.value:
                             color = json.get("color")
-                            self.__game.addPlayerColor(self.__id, color)
+                            await self.__con.send_json(
+                                {
+                                    "code": EventsSendCode.setColor.value,
+                                    "color": color,
+                                    "success": self.__game.addPlayerColor(self.__id, color)
+                                }
+                            )
                     case _:
                         print(f"Evento no manejado: {opcode}")
             
