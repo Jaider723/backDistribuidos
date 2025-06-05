@@ -1,6 +1,7 @@
 from threading import Semaphore
 from fastapi import WebSocket, WebSocketDisconnect
 from .enums import EventsCode, EventsSendCode
+import asyncio
 
 class Player:
     
@@ -40,7 +41,10 @@ class Player:
         try:
             while(self.getIsConnect()):
                 json = await self.__con.receive_json(mode='text')
+                print(json)
                 opcode = json.get("code")
+                if opcode is None:
+                    raise ValueError("El codigo del evento no puede ser nulo")
                 match opcode:
                     case EventsCode.setColor.value:
                             color = json.get("color")
