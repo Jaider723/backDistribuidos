@@ -1,7 +1,7 @@
 from .enums import GameStateEnum
 from .person import Player
 from typing import List
-from threading import Thread, Semaphore
+from threading import Semaphore
 from uuid import uuid4
 
 class Game:
@@ -13,10 +13,12 @@ class Game:
         self.__turn: int = 0
         self.__diceNumber: tuple[int, int] = (0, 0)
         self.__semaphore = Semaphore()
-        self.__gameColors: dict{ 'yellow':False,
-                                'red':False,
-                                'blue':False,
-                                'green':False}
+        self.__gameColors: dict[str, bool] = { 
+                                                'yellow':False,
+                                                'red':False,
+                                                'blue':False,
+                                                'green':False
+                                            }
         
     def getId(self)->str:
         return self.__id
@@ -41,8 +43,9 @@ class Game:
     def addPlayerColor(self,  playerId: str, gameId: str, color: str) ->bool:
         self.__semaphore.acquire()
         if (not self.__gameColors[color]):
-            player = game.getPlayer(playerId)
-            player.setColor(color)
+            player = self.getPlayer(playerId)
+            if(player is not None):
+                player.setColor(color)
             self.__semaphore.release()
             return True
         return False

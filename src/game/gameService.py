@@ -1,8 +1,7 @@
 from .gameObject import Game
 from .person import Player
 from typing import List
-from fastapi import WebSocket4
-from threading import Thread, Semaphore
+from fastapi import WebSocket
 
 class GameEventsService:
     
@@ -17,6 +16,6 @@ class GameEventsService:
     def addPlayer(self, con: WebSocket,  playerId: str, gameId: str, name: str)->bool:
         for game in self.__games:
             if(game.getId() == gameId):
-                game.addPlayer(Player(playerId, name, [0.0, 0.0, 0.0], con, game))
+                game.addPlayer(Player(playerId, name, "", con, game))
                 return True
         return False
