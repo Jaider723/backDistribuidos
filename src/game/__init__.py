@@ -10,7 +10,9 @@ gameManeger = GameEventsService()
 
 @route.post("")
 def createGame():
-    return gameManeger.createGame()
+    value = gameManeger.createGame()
+    print("Se ha creado un juego con id:", value)
+    return value
 
 @route.websocket("/addPlayer")
 async def addPlayer(websocket: WebSocket):
