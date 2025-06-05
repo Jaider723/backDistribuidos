@@ -50,6 +50,13 @@ class Game:
             return True
         return False
     
+    def updateAvailableColors(self) -> dict[str, bool]:
+        self.__semaphore.acquire()
+        colors = self.__gameColors.copy()
+        self.__gameColors = {key: value for key, value in colors.items() if not value}
+        self.__semaphore.release()
+        return colors
+    
 class GameState:
     
     def __init__(self, gameState: GameStateEnum, game: Game):
