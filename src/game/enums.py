@@ -12,6 +12,7 @@ class EventsCode(Enum):
     setColor = 1
     ready = 2
     rollDices = 3
+    move = 4
 
     
 class EventsSendCode(Enum):
@@ -20,3 +21,5 @@ class EventsSendCode(Enum):
     beginTurn = 3
     ready = 4
     sendDices = 5
+    move = 6
+    endTurn = 7

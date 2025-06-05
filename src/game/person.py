@@ -61,6 +61,8 @@ class Player:
                     case EventsCode.rollDices.value:
                         playerId = self.__game.getTurnPlayer().getId()
                         await self.__game.rollDices(playerId)
+                    
+                    
 
                     case _:
                         print(f"Evento no manejado: {opcode}")

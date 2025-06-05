@@ -104,6 +104,11 @@ class Game:
         for player in self.__players:
             await player.send(EventsSendCode.ready.value, {})
     
+    async def moveBroadcast(self,data):
+        currentPlayer = self.getTurnPlayer()
+        for player in self.__players:
+            if player.getId() != currentPlayer.getId():
+                await player.send(EventsSendCode.move.value, data)
 
 class GameState:
 
