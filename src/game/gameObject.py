@@ -32,9 +32,10 @@ class Game:
             if(self.__players[i].getId() == playerId):
                 return self.__players[i]
             i+=1
+
     
-    def getIsOut(self) -> bool:
-        return self.__
+    def getReadyNumber(self) -> int:
+        return self.__readyNumber
     
     def setReadyNumber(self, number: int):
         self.__readyNumber = number
@@ -70,7 +71,7 @@ class Game:
         colors = self.__gameColors.copy()
         self.__gameColors = {key: value for key, value in colors.items() if not value}      
 
-    async def rollDices(self, playerId: str) -> tuple[int, int]:
+    async def rollDices(self, playerId: str, code: int = EventsSendCode.beginTurn.value) -> tuple[int, int]:
         player = self.getPlayer(playerId)
         print(f"Jugador {playerId} ha lanzado los dados")
 
@@ -81,14 +82,7 @@ class Game:
         print(f"Dados lanzados: {data['dices']}")
 
         if player is not None:
-
-            if player.__isOut:
-                print(f"Enviando evento de roll dice de jugador {playerId}")
-                await player.send(EventsSendCode.sendDices.value, data)
-
-            else:
-                print(f"Enviando evento de inicio de turno al jugador {playerId}")
-                await player.send(EventsSendCode.beginTurn.value, data)
+            await player.send(code, data)
 
         return self.__diceNumber
     
