@@ -58,8 +58,11 @@ class Game:
         self.__gameColors = {key: value for key, value in colors.items() if not value}
         self.__semaphore.release()
     
+    def sendAvailableColors(self, player: Player):
+        pass
+
 class GameState:
-    
+
     def __init__(self, gameState: GameStateEnum, game: Game):
         self.__gameState: GameStateEnum = gameState
         self.__game = game

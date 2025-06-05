@@ -32,10 +32,9 @@ class Player:
             while(self.getIsConnect()):
                 print("UWU recibido")
                 json = await self.__con.receive_json(mode='text')
-                print("Recibido:", EventsCode.setColor)
                 opcode = json.get("code")
                 match opcode:
-                    case EventsCode.setColor:
+                    case EventsCode.setColor.value:
                             color = json.get("color")
                             self.__game.addPlayerColor(self.__id, color)
                     case _:
