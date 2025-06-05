@@ -1,7 +1,9 @@
 from .gameObject import Game
 from .person import Player
 from typing import List
-from fastapi import WebSocket
+from fastapi import WebSocket4
+from threading import Thread, Semaphore
+
 class GameEventsService:
     
     def __init__(self):

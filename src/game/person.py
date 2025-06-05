@@ -6,7 +6,7 @@ class Player(Thread):
     
     def __init__(self, id: str, name: str, color:List[float], con: WebSocket, game: object):
         self.__name: str = name
-        self.__color: List[float] = color
+        self.__color:str = color
         self.__con:WebSocket = con
         self.__semaphore = Semaphore()
         self.__id: str = id
@@ -15,6 +15,12 @@ class Player(Thread):
     
     def getId(self)->str:
         return self.__id
+    
+    def setColor(self, color: str) -> List[float]:
+        valid_colors = ["yellow", "blue", "red", "green"]
+        if color.lower() not in valid_colors:
+            raise ValueError(f"Color '{color}' no es valido manco, escoger de: {valid_colors}.")
+        self.__color = color
         
     def run(self):
         try:
