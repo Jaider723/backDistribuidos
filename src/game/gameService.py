@@ -13,9 +13,9 @@ class GameEventsService:
         self.__games.append(game)
         return game.getId()
         
-    def addPlayer(self, con: WebSocket,  playerId: str, gameId: str, name: str)->bool:
+    async def addPlayer(self, con: WebSocket,  playerId: str, gameId: str, name: str)->bool:
         for game in self.__games:
             if(game.getId() == gameId):
-                game.addPlayer(Player(playerId, name, "", con, game))
+                await game.addPlayer(Player(playerId, name, "", con, game))
                 return True
         return False

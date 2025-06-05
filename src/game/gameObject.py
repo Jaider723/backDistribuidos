@@ -34,8 +34,9 @@ class Game:
     def changeState(self, gameState: GameStateEnum):
         self.__gamestate = self.__gamestate.changeState(gameState)
         
-    def addPlayer(self, player: Player):
+    async def addPlayer(self, player: Player):
         self.__players.append(player)
+        await player.run()
         
     def eventHadler(self, message: str):
         pass

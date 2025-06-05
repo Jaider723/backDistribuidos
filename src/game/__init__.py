@@ -24,8 +24,7 @@ async def addPlayer(websocket: WebSocket):
             raise ValueError("El playerId no puede ser nulo o vacio")
         if(json["name"] == "" or json["name"] is None):
             raise ValueError("El name no puede ser nulo o vacio")
-        print(json)
-        if  gameManeger.addPlayer(websocket, json["playerId"], json["gameId"], json["name"]):
+        if not await gameManeger.addPlayer(websocket, json["playerId"], json["gameId"], json["name"]):
             await websocket.send_json({
                 "code": -1
             })

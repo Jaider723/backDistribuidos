@@ -3,10 +3,9 @@ from fastapi import WebSocket, WebSocketDisconnect
 from .enums import EventsCode
 import asyncio
 
-class Player(Thread):
+class Player:
     
     def __init__(self, id: str, name: str, color:str, con: WebSocket, game: object):
-        super().__init__()
         self.__name: str = name
         self.__color:str = color
         self.__con:WebSocket = con
@@ -27,15 +26,13 @@ class Player(Thread):
         self.__semaphore.release()
         return is_connected
 
-    def run(self):
-        asyncio.run(self._async_run())
-    
-    async def _async_run(self):
+    async def run(self):
         print("funcionando")
         try:
             while(self.getIsConnect()):
+                print("UWU recibido")
                 json = await self.__con.receive_json(mode='text')
-                print(json)
+                print("Recibido:", EventsCode.setColor)
                 opcode = json.get("code")
                 match opcode:
                     case EventsCode.setColor:
@@ -44,8 +41,8 @@ class Player(Thread):
                     case _:
                         print(f"Evento no manejado: {opcode}")
             
-        except WebSocketDisconnect:
-            print("se ha desconectado un jugador")
+        except WebSocketDisconnect as e:
+            print(f"se ha desconectado un jugador: {e}")
             self.__semaphore.acquire()
             self.__isConect = False
             self.__semaphore.release()
