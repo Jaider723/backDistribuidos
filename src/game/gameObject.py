@@ -17,6 +17,7 @@ class Game:
         self.__turn: int = 0
         self.__diceNumber: tuple[int, int] = (0, 0)
         self.__semaphore = Semaphore()
+        self.__readyNumber = 0
         self.__gameColors: dict[str, bool] = { 
                                                 'yellow':False,
                                                 'red':False,
@@ -33,7 +34,12 @@ class Game:
             if(self.__players[i].getId() == playerId):
                 return self.__players[i]
             i+=1
-        
+
+    def getRedyNumber(self) -> int:
+        return self.__readyNumber
+    
+    def setReadyNumber(self, number: int):
+        self.__readyNumber = number
     
     def changeState(self, gameState: GameStateEnum):
         self.__gamestate = self.__gamestate.changeState(gameState)
@@ -82,13 +88,17 @@ class Game:
         self.__semaphore.release()
         return self.__diceNumber
     
-    def defineTurn(self, playerId: str):
-        self.__semaphore.acquire()
-        player = self.getPlayer(playerId)
-        if player is not None:
-            playerTurn = self.__turn % len(self.__players)
-        self.__semaphore.release()
+    def defineTurn(self):
+        playerTurn = self.__turn % len(self.__players)
         return playerTurn
+    
+    def getTurnPlayer(self) -> Player:
+        playerTurn = self.defineTurn()
+        return self.__players[playerTurn]
+    
+    def readyBroadcast(self):
+        for player in self.__players:
+            player.send(EventsSendCode.ready.value, {})
     
 
 class GameState:
