@@ -9,11 +9,11 @@ class GameStateEnum(Enum):
     end = 6
 
 class EventsCode(Enum):
-    setColor = 1,
-    ready = 2,
+    setColor = 1
+    ready = 2
     
 class EventsSendCode(Enum):
     setColor = 1
     availableColors = 2
-    beginTurn = 3,
+    beginTurn = 3
     ready = 4

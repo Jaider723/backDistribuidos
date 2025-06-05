@@ -1,7 +1,7 @@
 from threading import Semaphore
 from fastapi import WebSocket, WebSocketDisconnect
 from .enums import EventsCode, EventsSendCode
-import asyncio
+from typing import Dict
 
 class Player:
     
@@ -21,21 +21,13 @@ class Player:
         self.__color = color
 
     def getIsConnect(self) ->bool:
-        self.__semaphore.acquire()
         is_connected = self.__isConect
-        self.__semaphore.release()
         return is_connected
     
-    def send(self, code:str,  message: str) -> None:
-        self.__semaphore.acquire()
-        data = {
-            "code": code,
-        }
-        data.update(message)
+    async def send(self, code:int,  message: Dict[str, str]) -> None:
+        message["code"] = str(code)
         if self.__isConect:
-            asyncio.create_task(self.__con.send_json(data))
-            print(message)
-        self.__semaphore.release()
+            await self.__con.send_json(message)
 
     async def run(self):
         try:
@@ -47,21 +39,22 @@ class Player:
                     raise ValueError("El codigo del evento no puede ser nulo")
                 match opcode:
                     case EventsCode.setColor.value:
-                            color = json.get("color")
-                            await self.__con.send_json(
-                                {
-                                    "code": EventsSendCode.setColor.value,
-                                    "color": color,
-                                    "success": self.__game.addPlayerColor(self.__id, color)
-                                }
-                            )
+                        color = json.get("color")
+                        await self.__con.send_json(
+                            {
+                                "code": EventsSendCode.setColor.value,
+                                "color": color,
+                                "success": str(await self.__game.addPlayerColor(self.__id, color))
+                            }
+                        )
                     case EventsCode.ready.value:
-                        ready = self.__game.getReadyNumber()
-                        if ready >= 4:
+                        ready = self.__game.getReadyNumber() + 1
+                        if ready >= 1:
                             await self.__game.readyBroadcast()
-                            self.__game.getTurnPlayer()
-                        self.__game.setReadyNumber(ready + 1)
-
+                            playerId = self.__game.getTurnPlayer().getId()
+                            await self.__game.rollDices(playerId)
+                            continue
+                        self.__game.setReadyNumber(ready)
                     case _:
                         print(f"Evento no manejado: {opcode}")
             

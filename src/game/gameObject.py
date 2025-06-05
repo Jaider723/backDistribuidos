@@ -2,10 +2,8 @@ from .enums import GameStateEnum
 from typing import List
 from .person import Player
 from threading import Semaphore
-from .enums import EventsCode, EventsSendCode, GameStateEnum
+from .enums import EventsSendCode, GameStateEnum
 import secrets
-import asyncio
-import json
 import random
 
 class Game:
@@ -35,7 +33,7 @@ class Game:
                 return self.__players[i]
             i+=1
 
-    def getRedyNumber(self) -> int:
+    def getReadyNumber(self) -> int:
         return self.__readyNumber
     
     def setReadyNumber(self, number: int):
@@ -51,7 +49,7 @@ class Game:
     def eventHadler(self, message: str):
         pass
 
-    def addPlayerColor(self,  playerId: str, color: str) ->bool:
+    async def addPlayerColor(self,  playerId: str, color: str) ->bool:
         self.__semaphore.acquire()
         if (not self.__gameColors[color]):
             player = self.getPlayer(playerId)
@@ -63,8 +61,7 @@ class Game:
                 "colors": ",".join(list(self.__gameColors.keys()))
             }
             for player in self.__players:
-                player.send(EventsSendCode.availableColors.value, data)
-
+                await player.send(EventsSendCode.availableColors.value, data)
             self.__semaphore.release()
             return True
         return False
@@ -73,16 +70,17 @@ class Game:
         colors = self.__gameColors.copy()
         self.__gameColors = {key: value for key, value in colors.items() if not value}      
 
-    def rollDices(self, playerId: str) -> tuple[int, int]:
-        self.__semaphore.acquire()
+    async def rollDices(self, playerId: str) -> tuple[int, int]:
         player = self.getPlayer(playerId)
-        self.__diceNumber = (random.randint(1, 6), random.randint(1, 6))
+        print(f"Jugador {playerId} ha lanzado los dados")
+        self.__diceNumber = (random.randint(0, 5), random.randint(0, 5))
         data = {
             "dices": ",".join(map(str, self.__diceNumber)),
         }
+        print(f"Dados lanzados: {data['dices']}")
         if player is not None:
-            player.send(EventsSendCode.beginTurn.value, data)
-        self.__semaphore.release()
+            print(f"Enviando evento de inicio de turno al jugador {playerId}")
+            await player.send(EventsSendCode.beginTurn.value, data)
         return self.__diceNumber
     
     def defineTurn(self):
@@ -93,9 +91,9 @@ class Game:
         playerTurn = self.defineTurn()
         return self.__players[playerTurn]
     
-    def readyBroadcast(self):
+    async def readyBroadcast(self):
         for player in self.__players:
-            player.send(EventsSendCode.ready.value, {})
+            await player.send(EventsSendCode.ready.value, {})
     
 
 class GameState:
