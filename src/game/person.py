@@ -1,6 +1,7 @@
 from threading import Thread, Semaphore
 from fastapi import WebSocket, WebSocketDisconnect
 from .enums import receiveJson
+import asyncio
 
 class Player(Thread):
     
@@ -25,7 +26,10 @@ class Player(Thread):
         self.__semaphore.release()
         return is_connected
 
-    async def run(self):
+    def run(self):
+        asyncio.run(self._async_run())
+    
+    async def _async_run(self):
         print("funcionando")
         try:
             while(self.getIsConnect()):
@@ -40,3 +44,6 @@ class Player(Thread):
             
         except WebSocketDisconnect:
             print("se ha desconectado un jugador")
+            self.__semaphore.acquire()
+            self.__isConect = False
+            self.__semaphore.release()
