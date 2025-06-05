@@ -11,9 +11,12 @@ class GameStateEnum(Enum):
 class EventsCode(Enum):
     setColor = 1
     ready = 2
+    rollDices = 3
+
     
 class EventsSendCode(Enum):
     setColor = 1
     availableColors = 2
     beginTurn = 3
     ready = 4
+    sendDices = 5

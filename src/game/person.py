@@ -54,18 +54,14 @@ class Player:
                         if ready >= 1:
                             await self.__game.readyBroadcast()
                             playerId = self.__game.getTurnPlayer().getId()
-                            if self.__isOut:
-                                for _ in range(0, 2):
-                                    await self.__game.rollDices(playerId)
-                                    if self.__game.diceNumber[0] != self.__game.diceNumber[1]:
-                                        self.__isOut = True
-                                        break
-                                    continue
-                            else: await self.__game.rollDices(playerId)
+                            await self.__game.rollDices(playerId)
                             continue
                         self.__game.setReadyNumber(ready)
 
-                
+                    case EventsCode.rollDices.value:
+                        playerId = self.__game.getTurnPlayer().getId()
+                        await self.__game.rollDices(playerId)
+
                     case _:
                         print(f"Evento no manejado: {opcode}")
             
