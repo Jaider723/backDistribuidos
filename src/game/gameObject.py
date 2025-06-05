@@ -2,8 +2,11 @@ from .enums import GameStateEnum
 from typing import List
 from .person import Player
 from threading import Semaphore
+from .enums import EventsCode, EventsSendCode, GameStateEnum
 import secrets
+import asyncio
 import json
+import random
 
 class Game:
     
@@ -57,7 +60,7 @@ class Game:
             }
 
             for player in self.__players:
-                player.send("setColor", data)
+                player.send(EventsSendCode.setColor.value, data)
 
             self.__semaphore.release()
             return True
@@ -65,7 +68,19 @@ class Game:
     
     def updateAvailableColors(self):
         colors = self.__gameColors.copy()
-        self.__gameColors = {key: value for key, value in colors.items() if not value}        
+        self.__gameColors = {key: value for key, value in colors.items() if not value}      
+
+    def rollDices(self, playerId: str) -> tuple[int, int]:
+        self.__semaphore.acquire()
+        player = self.getPlayer(playerId)
+        self.__diceNumber = (random.randint(1, 6), random.randint(1, 6))
+        data = {
+            "dices": self.__diceNumber
+        }
+        player.send(GameStateEnum.beginTurn.value, data)
+        self.__semaphore.release()
+        return self.__diceNumber
+    
 
 class GameState:
 
@@ -75,6 +90,7 @@ class GameState:
         
     def changeState(self, gameState: GameStateEnum)-> 'GameState':
         return self
+    
     def run(self, message: str):
         pass
     
