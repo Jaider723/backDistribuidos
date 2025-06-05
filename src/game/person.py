@@ -55,8 +55,6 @@ class Player:
                             await self.__game.readyBroadcast()
                             playerId = self.__game.getTurnPlayer().getId()
                             await self.__game.rollDices(playerId)
-                            print("Todos los jugadores estan listos, se inicia el juego")
-                            print(playerId)
                             continue
                         self.__game.setReadyNumber(ready)
 
@@ -68,7 +66,6 @@ class Player:
                         await self.__game.moveBroadcast(json.get("playerId"), json.get("box"), json.get("pawn"))
 
                     case EventsCode.endTurn.value:
-                        print("este es el actual",{playerId})
                         await self.__game.endTurn()
 
 
