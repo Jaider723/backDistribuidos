@@ -20,10 +20,17 @@ class Player(Thread):
         if color.lower() not in valid_colors:
             raise ValueError(f"Color '{color}' no es valido manco, escoger de: {valid_colors}.")
         self.__color = color
-        
+
+    def getIsConnect(self) ->bool:
+        self.__semaphore.acquire()
+        is_connected = self.__isConect
+        self.__semaphore.release()
+        return is_connected
+
     def run(self):
         try:
-            while(self.__isConect):
+            while(self.getIsConnect()):
                 pass
+            
         except WebSocketDisconnect:
             print("se ha desconectado un jugador")
