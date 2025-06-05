@@ -46,16 +46,16 @@ class Game:
             player = self.getPlayer(playerId)
             if(player is not None):
                 player.setColor(color)
+                self.updateAvailableColors()
             self.__semaphore.release()
             return True
         return False
     
-    def updateAvailableColors(self) -> dict[str, bool]:
+    def updateAvailableColors(self):
         self.__semaphore.acquire()
         colors = self.__gameColors.copy()
         self.__gameColors = {key: value for key, value in colors.items() if not value}
         self.__semaphore.release()
-        return colors
     
 class GameState:
     
@@ -67,3 +67,4 @@ class GameState:
         return self
     def run(self, message: str):
         pass
+    
