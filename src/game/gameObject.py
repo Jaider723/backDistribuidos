@@ -1,6 +1,6 @@
 from .enums import GameStateEnum
+from typing import List, TypeVar
 from .person import Player
-from typing import List
 from threading import Semaphore
 import secrets
 
@@ -49,6 +49,8 @@ class Game:
             self.__semaphore.release()
             return True
         return False
+    
+T = TypeVar('T', bound='Game')
     
 class GameState:
     

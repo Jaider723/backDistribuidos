@@ -1,17 +1,18 @@
 from threading import Thread, Semaphore
 from fastapi import WebSocket, WebSocketDisconnect
-from .enums import receiveJson
+from .enums import EventsCode
 import asyncio
 
 class Player(Thread):
     
     def __init__(self, id: str, name: str, color:str, con: WebSocket, game: object):
+        super().__init__()
         self.__name: str = name
         self.__color:str = color
         self.__con:WebSocket = con
         self.__semaphore = Semaphore()
         self.__id: str = id
-        self.__game = game
+        self.__game: object = game
         self.__isConect: bool = True
     
     def getId(self)->str:
@@ -37,10 +38,11 @@ class Player(Thread):
                 print(json)
                 opcode = json.get("code")
                 match opcode:
-                    case receiveJson:
-                        if opcode == receiveJson.setColor:
+                    case EventsCode.setColor:
                             color = json.get("color")
                             self.__game.addPlayerColor(self.__id, color)
+                    case _:
+                        print(f"Evento no manejado: {opcode}")
             
         except WebSocketDisconnect:
             print("se ha desconectado un jugador")
