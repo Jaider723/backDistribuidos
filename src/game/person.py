@@ -55,6 +55,26 @@ class Player:
                                     "success": self.__game.addPlayerColor(self.__id, color)
                                 }
                             )
+
+                    # case GameStateEnum.beginTurn.value:
+                    #     print("si entra acá")
+                    #     await self.__con.send_json(
+                    #             {
+                    #                 "code": GameStateEnum.beginTurn.value,
+                    #                 "dice": self.__game.rollDices(self.__id),
+                    #                 "success": True
+                    #             }
+                    #         )
+                    
+                    # case GameStateEnum.turn.value:
+                    #     pass
+
+                    # case GameStateEnum.endTurn.value:
+                    #     pass
+
+                    # case GameStateEnum.end.value:
+                    #     pass
+
                     case _:
                         print(f"Evento no manejado: {opcode}")
             
