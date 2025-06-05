@@ -1,5 +1,4 @@
 from .gameService import GameEventsService
-from .gameObject import Game, GameState
 from fastapi import APIRouter, WebSocket, WebSocketException
 
 route = APIRouter(
@@ -18,6 +17,7 @@ async def addPlayer(websocket: WebSocket):
     try:
         await websocket.accept()
         json = await websocket.receive_json(mode='text')
+        print("Recibido:", json)
         if(json["gameId"] == "" or json["gameId"] is None):
             raise ValueError("El gameId no puede ser nulo o vacio")
         if(json["playerId"] == "" or json["playerId"] is None):
