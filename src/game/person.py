@@ -56,6 +56,7 @@ class Player:
                             playerId = self.__game.getTurnPlayer().getId()
                             await self.__game.rollDices(playerId)
                             print("Todos los jugadores estan listos, se inicia el juego")
+                            print(playerId)
                             continue
                         self.__game.setReadyNumber(ready)
 
