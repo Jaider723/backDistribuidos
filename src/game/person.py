@@ -1,7 +1,6 @@
-from threading import Thread, Semaphore
+from threading import Semaphore
 from fastapi import WebSocket, WebSocketDisconnect
 from .enums import EventsCode
-import asyncio
 
 class Player:
     
