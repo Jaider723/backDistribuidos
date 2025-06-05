@@ -3,6 +3,7 @@ from typing import List
 from .person import Player
 from threading import Semaphore
 import secrets
+import json
 
 class Game:
     
@@ -47,19 +48,24 @@ class Game:
             player = self.getPlayer(playerId)
             if(player is not None):
                 player.setColor(color)
+                self.__gameColors[color] = True
                 self.updateAvailableColors()
+            print("hasta aqui bien")
+
+            data = {
+                "color": list(self.__gameColors.keys())
+            }
+
+            for player in self.__players:
+                player.send("setColor", data)
+
             self.__semaphore.release()
             return True
         return False
     
     def updateAvailableColors(self):
-        self.__semaphore.acquire()
         colors = self.__gameColors.copy()
-        self.__gameColors = {key: value for key, value in colors.items() if not value}
-        self.__semaphore.release()
-    
-    def sendAvailableColors(self, player: Player):
-        pass
+        self.__gameColors = {key: value for key, value in colors.items() if not value}        
 
 class GameState:
 
