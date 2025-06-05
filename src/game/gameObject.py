@@ -81,6 +81,14 @@ class Game:
         self.__semaphore.release()
         return self.__diceNumber
     
+    def defineTurn(self, playerId: str):
+        self.__semaphore.acquire()
+        player = self.getPlayer(playerId)
+        if player is not None:
+            playerTurn = self.__turn % len(self.__players)
+        self.__semaphore.release()
+        return playerTurn
+    
 
 class GameState:
 
