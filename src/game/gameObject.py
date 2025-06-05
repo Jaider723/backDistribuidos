@@ -1,5 +1,5 @@
 from .enums import GameStateEnum
-from typing import List, TypeVar
+from typing import List
 from .person import Player
 from threading import Semaphore
 import secrets
@@ -50,7 +50,12 @@ class Game:
             return True
         return False
     
-T = TypeVar('T', bound='Game')
+    def updateAvailableColors(self) -> dict[str, bool]:
+        self.__semaphore.acquire()
+        colors = self.__gameColors.copy()
+        self.__gameColors = {key: value for key, value in colors.items() if not value}
+        self.__semaphore.release()
+        return colors
     
 class GameState:
     
