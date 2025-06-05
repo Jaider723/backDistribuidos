@@ -53,14 +53,11 @@ class Game:
                 player.setColor(color)
                 self.__gameColors[color] = True
                 self.updateAvailableColors()
-            print("hasta aqui bien")
-
             data = {
-                "colors": "".join(list(self.__gameColors.keys()))
+                "colors": ",".join(list(self.__gameColors.keys()))
             }
-
             for player in self.__players:
-                player.send(EventsSendCode.setColor.value, data)
+                player.send(EventsSendCode.availableColors.value, data)
 
             self.__semaphore.release()
             return True
@@ -75,7 +72,7 @@ class Game:
         player = self.getPlayer(playerId)
         self.__diceNumber = (random.randint(1, 6), random.randint(1, 6))
         data = {
-            "dices": "".join(map(str, self.__diceNumber)),
+            "dices": ",".join(map(str, self.__diceNumber)),
         }
         if player is not None:
             player.send(EventsSendCode.beginTurn.value, data)
