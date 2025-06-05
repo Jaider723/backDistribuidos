@@ -2,14 +2,14 @@ from .enums import GameStateEnum
 from .person import Player
 from typing import List
 from threading import Semaphore
-from uuid import uuid4
+import secrets
 
 class Game:
     
     def __init__(self):
         self.__gamestate: GameState
         self.__players: List[Player] = []
-        self.__id: str = str(uuid4())
+        self.__id: str = secrets.token_hex(4)
         self.__turn: int = 0
         self.__diceNumber: tuple[int, int] = (0, 0)
         self.__semaphore = Semaphore()
