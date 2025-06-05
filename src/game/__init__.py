@@ -34,4 +34,3 @@ async def addPlayer(websocket: WebSocket):
     except ValueError as e:
         await websocket.close(code=1008, reason=str(e))
         print(f"Error: {e}")
-

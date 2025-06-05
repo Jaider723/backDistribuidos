@@ -40,7 +40,7 @@ class Game:
     def eventHadler(self, message: str):
         pass
 
-    def addPlayerColor(self,  playerId: str, gameId: str, color: str) ->bool:
+    def addPlayerColor(self,  playerId: str, color: str) ->bool:
         self.__semaphore.acquire()
         if (not self.__gameColors[color]):
             player = self.getPlayer(playerId)

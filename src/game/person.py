@@ -1,5 +1,6 @@
 from threading import Thread, Semaphore
 from fastapi import WebSocket, WebSocketDisconnect
+from .enums import receiveJson
 
 class Player(Thread):
     
@@ -16,9 +17,6 @@ class Player(Thread):
         return self.__id
     
     def setColor(self, color: str) -> None:
-        valid_colors = ["yellow", "blue", "red", "green"]
-        if color.lower() not in valid_colors:
-            raise ValueError(f"Color '{color}' no es valido manco, escoger de: {valid_colors}.")
         self.__color = color
 
     def getIsConnect(self) ->bool:
@@ -27,10 +25,18 @@ class Player(Thread):
         self.__semaphore.release()
         return is_connected
 
-    def run(self):
+    async def run(self):
+        print("funcionando")
         try:
             while(self.getIsConnect()):
-                pass
+                json = await self.__con.receive_json(mode='text')
+                print(json)
+                opcode = json.get("code")
+                match opcode:
+                    case receiveJson:
+                        if opcode == receiveJson.setColor:
+                            color = json.get("color")
+                            self.__game.addPlayerColor(self.__id, color)
             
         except WebSocketDisconnect:
             print("se ha desconectado un jugador")

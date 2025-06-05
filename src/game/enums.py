@@ -8,5 +8,5 @@ class GameStateEnum(Enum):
     endturn = 5,
     end = 6
 
-class receive_json(Enum):
+class receiveJson(Enum):
     setColor = 1
