@@ -51,7 +51,7 @@ class Player:
 
                     case EventsCode.ready.value:
                         ready = self.__game.getReadyNumber() + 1
-                        if ready >= 1:
+                        if ready >= 4:
                             await self.__game.readyBroadcast()
                             playerId = self.__game.getTurnPlayer().getId()
                             await self.__game.rollDices(playerId)
