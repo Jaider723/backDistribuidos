@@ -24,6 +24,17 @@ class Player:
         is_connected = self.__isConect
         self.__semaphore.release()
         return is_connected
+    
+    def send(self, code:str,  message: str) -> None:
+        self.__semaphore.acquire()
+        data = {
+            "code": code,
+        }
+        data.update(message)
+        if self.__isConect:
+            asyncio.create_task(self.__con.send_json(data))
+            print(message)
+        self.__semaphore.release()
 
     async def run(self):
         try:
