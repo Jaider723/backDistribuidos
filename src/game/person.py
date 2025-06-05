@@ -68,7 +68,7 @@ class Player:
                         await self.__game.moveBroadcast(json.get("playerId"), json.get("box"), json.get("pawn"))
 
                     case EventsCode.endTurn.value:
-                        print("este es el actual"{playerId})
+                        print("este es el actual",{playerId})
                         await self.__game.endTurn()
 
 
