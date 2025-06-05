@@ -13,6 +13,7 @@ class Player:
         self.__id: str = id
         self.__game: object = game
         self.__isConect: bool = True
+        self.__isOut: bool = False
     
     def getId(self)->str:
         return self.__id
@@ -47,14 +48,24 @@ class Player:
                                 "success": str(await self.__game.addPlayerColor(self.__id, color))
                             }
                         )
+
                     case EventsCode.ready.value:
                         ready = self.__game.getReadyNumber() + 1
                         if ready >= 1:
                             await self.__game.readyBroadcast()
                             playerId = self.__game.getTurnPlayer().getId()
-                            await self.__game.rollDices(playerId)
+                            if self.__isOut:
+                                for _ in range(0, 2):
+                                    await self.__game.rollDices(playerId)
+                                    if self.__game.diceNumber[0] != self.__game.diceNumber[1]:
+                                        self.__isOut = True
+                                        break
+                                    continue
+                            else: await self.__game.rollDices(playerId)
                             continue
                         self.__game.setReadyNumber(ready)
+
+                
                     case _:
                         print(f"Evento no manejado: {opcode}")
             
