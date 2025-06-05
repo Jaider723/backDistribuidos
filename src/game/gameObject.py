@@ -103,6 +103,13 @@ class Game:
         for player in self.__players:
             if player.getId() != currentPlayer.getId():
                 await player.send(EventsSendCode.move.value, data)
+                # await player.send(EventsSendCode.endTurn.value, {})
+    
+    async def endTurn(self):
+        self.__turn += 1
+        player = self.getTurnPlayer()
+        await player.send(EventsSendCode.ready.value, {})
+        
 
 class GameState:
 

@@ -13,6 +13,7 @@ class EventsCode(Enum):
     ready = 2
     rollDices = 3
     move = 4
+    endTurn = 5
 
     
 class EventsSendCode(Enum):

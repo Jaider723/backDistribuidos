@@ -62,7 +62,12 @@ class Player:
                         playerId = self.__game.getTurnPlayer().getId()
                         await self.__game.rollDices(playerId)
                     
-                    
+                    case EventsCode.move.value:
+                        await self.__game.moveBroadcast(json.get("playerId"), json.get("box"), json.get("pawn"))
+
+                    case EventsCode.endTurn.value:
+                        await self.__game.endTurn()
+
 
                     case _:
                         print(f"Evento no manejado: {opcode}")
